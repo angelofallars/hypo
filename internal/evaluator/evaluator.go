@@ -37,6 +37,7 @@ func Exec(node *html.Node, env *object.Env) error {
 	return nil
 }
 
+// eval evaluates a single [html.Node].
 func eval(node *html.Node, env *object.Env) error {
 	cmd, ok := commands[node.Data]
 	if !ok {
