@@ -18,6 +18,7 @@ type stack struct {
 	slice []any
 }
 
+// NewEnv returns a new [object.Env] instance.
 func NewEnv() *Env {
 	return &Env{
 		Stack: stack{make([]any, 0, 256)},

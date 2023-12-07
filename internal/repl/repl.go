@@ -15,6 +15,7 @@ const (
 	prompt = ">>> "
 )
 
+// Start starts the REPL environment.
 func Start() {
 	scanner := bufio.NewScanner(os.Stdin)
 	env := object.NewEnv()
