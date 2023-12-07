@@ -22,6 +22,8 @@ const (
 	divide
 )
 
+var ErrCmdNotFound = errors.New("could not find command definition for this tag")
+
 // Exec executes an HTML, the programming language, program
 // from an [html.Node], traversing through it and its siblings.
 func Exec(node *html.Node, env *object.Env) error {
@@ -38,8 +40,11 @@ func Exec(node *html.Node, env *object.Env) error {
 func eval(node *html.Node, env *object.Env) error {
 	cmd, ok := commands[node.Data]
 	if !ok {
-		// TODO: Error for unrecognized tags
-		return nil
+		if node.Type == html.ElementNode {
+			return ErrCmdNotFound
+		} else {
+			return nil
+		}
 	}
 
 	err := cmd(node, env)
