@@ -26,15 +26,25 @@ const (
 // from an [html.Node], traversing through it and its siblings.
 func Exec(node *html.Node, env *object.Env) error {
 	for n := node; n != nil; n = n.NextSibling {
-		cmd, ok := commands[n.Data]
-		if !ok {
-			continue
-		}
-
-		err := cmd(n, env)
+		err := eval(n, env)
 		if err != nil {
 			fmt.Printf("error on <%v>: %v\n", n.Data, err)
 		}
+	}
+
+	return nil
+}
+
+func eval(node *html.Node, env *object.Env) error {
+	cmd, ok := commands[node.Data]
+	if !ok {
+		// TODO: Error for unrecognized tags
+		return nil
+	}
+
+	err := cmd(node, env)
+	if err != nil {
+		return err
 	}
 
 	return nil
