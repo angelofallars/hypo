@@ -204,14 +204,14 @@ func evalBinOp(op binOp) command {
 	}
 }
 
-// evalPrintOutput prints the top value without consuming it to stdout.
-func evalPrintOutput(node *html.Node, env *object.Env) error {
-	last, err := env.Stack.Top()
+// evalDuplicate duplicates the top value on the stack.
+func evalDuplicate(node *html.Node, env *object.Env) error {
+	v, err := env.Stack.Top()
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(last)
+	env.Stack.Push(v)
 	return nil
 }
 
@@ -221,14 +221,14 @@ func evalDelete(node *html.Node, env *object.Env) error {
 	return err
 }
 
-// evalDuplicate duplicates the top value on the stack.
-func evalDuplicate(node *html.Node, env *object.Env) error {
-	v, err := env.Stack.Top()
+// evalPrintOutput prints the top value without consuming it to stdout.
+func evalPrintOutput(node *html.Node, env *object.Env) error {
+	last, err := env.Stack.Top()
 	if err != nil {
 		return err
 	}
 
-	env.Stack.Push(v)
+	fmt.Println(last)
 	return nil
 }
 
