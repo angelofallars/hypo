@@ -148,9 +148,9 @@ func evalPushString(node *html.Node, env *object.Env) error {
 func evalPushNumber(node *html.Node, env *object.Env) error {
 	attrs := attrMap(node)
 
-	value, err := getAttr(attrs, "value")
-	if err != nil {
-		return err
+	value, ok := getAttr(attrs, "value")
+	if !ok {
+		return fmt.Errorf("attribute 'value' not found")
 	}
 
 	number, err := strconv.ParseFloat(value, 64)
@@ -240,10 +240,10 @@ func attrMap(node *html.Node) map[string]string {
 }
 
 // getAttr gets a value from the attribute map, if it exists.
-func getAttr(attrs map[string]string, key string) (string, error) {
+func getAttr(attrs map[string]string, key string) (string, bool) {
 	value, ok := attrs[key]
 	if !ok {
-		return "", fmt.Errorf("attribute '%v' not found", key)
+		return "", false
 	}
-	return value, nil
+	return value, true
 }
