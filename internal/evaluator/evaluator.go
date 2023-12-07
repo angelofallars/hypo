@@ -52,19 +52,84 @@ func eval(node *html.Node, env *object.Env) error {
 
 // commands maps an HTML tag name to a command function.
 var commands = map[string]command{
+	// ===============================
 	// Literals
+	// ===============================
 	"s":    evalPushString,
 	"data": evalPushNumber,
+	// TODO: "ol"
+	// TODO: "table"
+
+	// ===============================
 	// Math Commands
+	// ===============================
 	"dd":  evalBinOp(add),
 	"sub": evalBinOp(subtract),
 	"ul":  evalBinOp(multiply),
 	"div": evalBinOp(divide),
-	// Stack Manipulation commands
+
+	// ===============================
+	// Stack Manipulation Commands
+	// ===============================
 	"dt":  evalDuplicate,
 	"del": evalDelete,
+
+	// ===============================
+	// Comparison Commands
+	// ===============================
+	// TODO: "big"
+	// TODO: "small"
+	// TODO: "em"
+
+	// ===============================
+	// Logical Operators
+	// ===============================
+	// TODO: "b"
+	// TODO: "bdi"
+	// TODO: "bdo"
+
+	// ===============================
+	// Control Flow
+	// ===============================
+	// TODO: "i"
+	// TODO: "rt"
+	// TODO: "a"
+
+	// ===============================
+	// Variables
+	// ===============================
+	// TODO: "var"
+	// TODO: "cite"
+
+	// ===============================
 	// I/O
+	// ===============================
+	// TODO: "input"
 	"output": evalPrintOutput,
+	// TODO: "wbr"
+
+	// ===============================
+	// Properties
+	// ===============================
+	// TODO: "rp"
+	// TODO: "samp"
+
+	// ===============================
+	// Arrays/Dynamic Properties
+	// ===============================
+	// TODO: "address"
+	// TODO: "ins"
+
+	// ===============================
+	// Functions
+	// ===============================
+	// TODO: "dfn"
+
+	// ===============================
+	// Programs
+	// ===============================
+	// TODO: "main"
+	// TODO: "body"
 }
 
 // evalPushString pushes a string into the stack.
