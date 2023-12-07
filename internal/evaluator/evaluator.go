@@ -39,13 +39,15 @@ func Exec(node *html.Node, env *object.Env) error {
 
 // eval evaluates a single [html.Node].
 func eval(node *html.Node, env *object.Env) error {
+	// We are only interested in element nodes, which
+	// are the only statements in HTML, the programming language
+	if node.Type != html.ElementNode {
+		return nil
+	}
+
 	cmd, ok := commands[node.Data]
 	if !ok {
-		if node.Type == html.ElementNode {
-			return ErrCmdNotFound
-		} else {
-			return nil
-		}
+		return ErrCmdNotFound
 	}
 
 	err := cmd(node, env)
