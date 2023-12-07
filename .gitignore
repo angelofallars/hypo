@@ -1,0 +1,11 @@
+# Binaries
+/bin/
+__debug*
+
+# Temporary
+tmp/
+
+# EWW
+node_modules/
+
+reference/
