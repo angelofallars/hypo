@@ -11,22 +11,22 @@ import (
 type Env struct {
 	// Stack is the primary storage of values.
 	Stack stack
-	Vars  map[string]any
+	Vars  map[string]Object
 }
 
 type stack struct {
-	slice []any
+	slice []Object
 }
 
 // NewEnv returns a new [object.Env] instance.
 func NewEnv() *Env {
 	return &Env{
-		Stack: stack{make([]any, 0, 256)},
-		Vars: map[string]any{
+		Stack: stack{make([]Object, 0, 256)},
+		Vars: map[string]Object{
 			// Start with standard variables for common values
-			"true":  true,
-			"false": false,
-			"null":  nil,
+			"true":  &Bool{Value: true},
+			"false": &Bool{Value: false},
+			"null":  &Null{},
 		},
 	}
 }
@@ -34,12 +34,12 @@ func NewEnv() *Env {
 var ErrStackEmpty = errors.New("Stack empty")
 
 // Push a value to the top of the stack.
-func (s *stack) Push(v any) {
+func (s *stack) Push(v Object) {
 	s.slice = append(s.slice, v)
 }
 
 // Pop a value from the top of the stack and return it.
-func (s *stack) Pop() (any, error) {
+func (s *stack) Pop() (Object, error) {
 	v, err := s.Top()
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (s *stack) Pop() (any, error) {
 }
 
 // Receive a value from the top of the stack without consuming it.
-func (s *stack) Top() (any, error) {
+func (s *stack) Top() (Object, error) {
 	if len(s.slice) == 0 {
 		return nil, ErrStackEmpty
 	}

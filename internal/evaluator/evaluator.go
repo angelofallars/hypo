@@ -142,7 +142,8 @@ var commands = map[string]command{
 
 // evalPushString pushes a string into the stack.
 func evalPushString(node *html.Node, env *object.Env) error {
-	env.Stack.Push(node.FirstChild.Data)
+	obj := &object.String{Value: node.FirstChild.Data}
+	env.Stack.Push(obj)
 	return nil
 }
 
@@ -160,7 +161,8 @@ func evalPushNumber(node *html.Node, env *object.Env) error {
 		return errors.New("value is not a valid number")
 	}
 
-	env.Stack.Push(number)
+	obj := &object.Number{Value: number}
+	env.Stack.Push(obj)
 
 	return nil
 }
@@ -177,29 +179,35 @@ func evalBinOp(op binOp) command {
 			return err
 		}
 
-		topNum, ok := top.(number)
+		// TODO: support addition for other types
+
+		topNum, ok := top.(*object.Number)
 		if !ok {
 			return errors.New("first value is not a number")
 		}
 
-		nextNum, ok := next.(number)
+		nextNum, ok := next.(*object.Number)
 		if !ok {
 			return errors.New("second value is not a number")
 		}
 
+		// TODO: use a method for the object for arithmetic
+
 		var result number
 		switch op {
 		case add:
-			result = topNum + nextNum
+			result = topNum.Value + nextNum.Value
 		case subtract:
-			result = topNum - nextNum
+			result = topNum.Value - nextNum.Value
 		case multiply:
-			result = topNum * nextNum
+			result = topNum.Value * nextNum.Value
 		case divide:
-			result = topNum / nextNum
+			result = topNum.Value / nextNum.Value
 		}
 
-		env.Stack.Push(result)
+		obj := &object.Number{Value: result}
+		env.Stack.Push(obj)
+
 		return nil
 	}
 }
@@ -228,7 +236,7 @@ func evalPrintOutput(node *html.Node, env *object.Env) error {
 		return err
 	}
 
-	fmt.Println(last)
+	fmt.Println(last.Display())
 	return nil
 }
 

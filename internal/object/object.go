@@ -1,5 +1,7 @@
 package object
 
+import "fmt"
+
 type ObjectType string
 
 const (
@@ -16,34 +18,34 @@ func (ot ObjectType) objectType() {}
 
 // Object represents an object in the runtime.
 type Object interface {
-	// Dummy method
-	object()
+	// Type returns the primitive type of the object.
 	Type() ObjectType
+	// Display returns the string representation of the value.
+	Display() string
 }
 
 type Number struct {
 	Value float64
 }
 
-func (n *Number) object() {}
-func (n *Number) Type() ObjectType {
-	return NumberObject
-}
+func (n *Number) Type() ObjectType { return NumberObject }
+func (n *Number) Display() string  { return fmt.Sprint(n.Value) }
 
 type String struct {
 	Value string
 }
 
-func (n *String) object() {}
-func (n *String) Type() ObjectType {
-	return StringObject
-}
+func (n *String) Type() ObjectType { return StringObject }
+func (n *String) Display() string  { return fmt.Sprintf("\"%v\"", n.Value) }
 
 type Bool struct {
 	Value bool
 }
 
-func (n *Bool) object() {}
-func (n *Bool) Type() ObjectType {
-	return BoolObject
-}
+func (n *Bool) Type() ObjectType { return BoolObject }
+func (n *Bool) Display() string  { return fmt.Sprint(n.Value) }
+
+type Null struct{}
+
+func (n *Null) Type() ObjectType { return NullObject }
+func (n *Null) Display() string  { return "null" }
