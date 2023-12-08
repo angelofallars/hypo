@@ -35,15 +35,15 @@ type String struct {
 	Value string
 }
 
-func (n *String) Type() ObjectType { return StringObject }
-func (n *String) Display() string  { return "\"" + n.Value + "\"" }
+func (s *String) Type() ObjectType { return StringObject }
+func (s *String) Display() string  { return "\"" + s.Value + "\"" }
 
 type Bool struct {
 	Value bool
 }
 
-func (n *Bool) Type() ObjectType { return BoolObject }
-func (n *Bool) Display() string  { return fmt.Sprint(n.Value) }
+func (b *Bool) Type() ObjectType { return BoolObject }
+func (b *Bool) Display() string  { return fmt.Sprint(b.Value) }
 
 type Null struct{}
 
