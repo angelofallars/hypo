@@ -36,7 +36,7 @@ type String struct {
 }
 
 func (n *String) Type() ObjectType { return StringObject }
-func (n *String) Display() string  { return fmt.Sprintf("\"%v\"", n.Value) }
+func (n *String) Display() string  { return "\"" + n.Value + "\"" }
 
 type Bool struct {
 	Value bool
