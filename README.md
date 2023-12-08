@@ -22,3 +22,63 @@ With no arguments, Hypo will spin up a REPL for you to type and run HTML, the pr
 $ hypo example/helloworld.html
 Hello world!
 ```
+
+## Status
+
+Currently implemented commands:
+
+Literals
+  - [x] `<s>`
+  - [x] `<data>`
+  - [ ] `<ol>`
+  - [ ] `<table>`
+
+Math Commands
+
+  - [x] `<dd>`
+  - [x] `<sub>`
+  - [x] `<ul>`
+  - [x] `<div>`
+
+Stack Manipulation Commands
+  - [x] `<dt>`
+  - [x] `<del>`
+
+Comparison Commands
+  - [ ] `<big>`
+  - [ ] `<small>`
+  - [ ] `<em>`
+
+Logical Operators
+  - [ ] `<b>`
+  - [ ] `<bdi>`
+  - [ ] `<bdo>`
+
+Control Flow
+  - [ ] `<i>`
+  - [ ] `<rt>`
+  - [ ] `<a>`
+
+Variables
+  - [ ] `<var>`
+  - [ ] `<cite>`
+
+I/O
+  - [ ] `<input>`
+  - [x] `<output>`
+  - [ ] `<wbr>`
+
+Properties
+  - [ ] `<rp>`
+  - [ ] `<samp>`
+
+Arrays/Dynamic Properties
+  - [ ] `<address>`
+  - [ ] `<ins>`
+
+Functions
+  - [ ] `<dfn>`
+
+Programs
+  - [ ] `<main>`
+  - [ ] `<body>`
