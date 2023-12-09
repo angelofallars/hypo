@@ -32,12 +32,12 @@ type stack struct {
 	slice []Object
 }
 
-// Push a value to the top of the stack.
+// Push inserts a value into the top of the stack.
 func (s *stack) Push(v Object) {
 	s.slice = append(s.slice, v)
 }
 
-// Pop a value from the top of the stack and return it.
+// Pop removes a value from the top of the stack and returns it.
 func (s *stack) Pop() (Object, error) {
 	v, err := s.Top()
 	if err != nil {
@@ -49,7 +49,7 @@ func (s *stack) Pop() (Object, error) {
 	return v, nil
 }
 
-// Receive a value from the top of the stack without consuming it.
+// Top returns a value from the top of the stack without consuming it.
 func (s *stack) Top() (Object, error) {
 	if len(s.slice) == 0 {
 		return nil, errs.NewStackError("stack is empty")
