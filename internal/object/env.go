@@ -31,7 +31,7 @@ func NewEnv() *Env {
 	}
 }
 
-var ErrStackEmpty = errors.New("Stack empty")
+var ErrStackEmpty = errors.New("stack empty")
 
 // Push a value to the top of the stack.
 func (s *stack) Push(v Object) {
