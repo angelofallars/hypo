@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/angelofallars/hypo/internal/evaluator"
-	"github.com/angelofallars/hypo/internal/object"
-	"github.com/angelofallars/hypo/internal/parser"
+	"github.com/angelofallars/hypo/internal/runtime"
 )
 
 const (
@@ -18,7 +16,7 @@ const (
 // Start starts the REPL environment.
 func Start() {
 	scanner := bufio.NewScanner(os.Stdin)
-	env := object.NewEnv()
+	runtime := runtime.New()
 
 	fmt.Println(splash)
 	for {
@@ -30,13 +28,7 @@ func Start() {
 
 		line := scanner.Text()
 
-		program, err := parser.Parse(line)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-			continue
-		}
-
-		err = evaluator.Exec(program, env)
+		err := runtime.Eval(line)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			continue

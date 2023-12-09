@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/angelofallars/hypo/internal/evaluator"
-	"github.com/angelofallars/hypo/internal/object"
-	"github.com/angelofallars/hypo/internal/parser"
 	"github.com/angelofallars/hypo/internal/repl"
+	"github.com/angelofallars/hypo/internal/runtime"
 	"github.com/spf13/cobra"
 )
 
@@ -29,15 +27,7 @@ func Exec() int {
 
 			contents := string(bytes)
 
-			program, err := parser.Parse(contents)
-			if err != nil {
-				cmd.PrintErrln(err)
-				return
-			}
-
-			env := object.NewEnv()
-
-			err = evaluator.Exec(program, env)
+			err = runtime.New().Eval(contents)
 			if err != nil {
 				cmd.PrintErrln(err)
 				return
