@@ -17,6 +17,7 @@ func Exec(node ast.Node, env *object.Env) error {
 	// ===============================
 	case *ast.Program:
 		err = evalProgram(node, env)
+
 	// ===============================
 	// Literals
 	// ===============================
@@ -28,11 +29,13 @@ func Exec(node ast.Node, env *object.Env) error {
 	// 	err = evalPushArray(node, env)
 	// case *ast.TableStatement:
 	// 	err = evalPushTable(node, env)
+
 	// ===============================
 	// Math commands
 	// ===============================
 	case *ast.BinaryOpStatement:
 		err = evalBinOp(node, env)
+
 	// ===============================
 	// Stack Manipulation Commands
 	// ===============================
@@ -40,6 +43,7 @@ func Exec(node ast.Node, env *object.Env) error {
 		err = evalDuplicate(node, env)
 	case *ast.DeleteStatement:
 		err = evalDelete(node, env)
+
 	// ===============================
 	// I/O
 	// ===============================
