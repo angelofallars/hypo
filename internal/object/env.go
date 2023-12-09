@@ -1,9 +1,9 @@
 package object
 
 import (
-	"errors"
-	"fmt"
 	"slices"
+
+	errs "github.com/angelofallars/hypo/internal/errors"
 )
 
 // Env is an environment of the runtime which contains runtime values.
@@ -28,8 +28,6 @@ func NewEnv() *Env {
 	}
 }
 
-var ErrStackEmpty = errors.New("stack empty")
-
 type stack struct {
 	slice []Object
 }
@@ -43,7 +41,7 @@ func (s *stack) Push(v Object) {
 func (s *stack) Pop() (Object, error) {
 	v, err := s.Top()
 	if err != nil {
-		return nil, err
+		return nil, errs.NewStackError("stack is empty")
 	}
 
 	topIndex := s.topIndex()
@@ -54,7 +52,7 @@ func (s *stack) Pop() (Object, error) {
 // Receive a value from the top of the stack without consuming it.
 func (s *stack) Top() (Object, error) {
 	if len(s.slice) == 0 {
-		return nil, ErrStackEmpty
+		return nil, errs.NewStackError("stack is empty")
 	}
 
 	return s.slice[s.topIndex()], nil
@@ -73,7 +71,7 @@ type vars struct {
 func (v *vars) Get(identifier string) (Object, error) {
 	object, ok := v.objects[identifier]
 	if !ok {
-		return nil, NewVarNotFoundError(identifier)
+		return nil, errs.NewVariableError("variable '%v' is not found", identifier)
 	}
 	return object, nil
 }
@@ -82,14 +80,4 @@ func (v *vars) Get(identifier string) (Object, error) {
 func (v *vars) Set(identifier string, object Object) error {
 	v.objects[identifier] = object
 	return nil
-}
-
-type VarNotFoundError struct{ Identifier string }
-
-func NewVarNotFoundError(identifier string) VarNotFoundError {
-	return VarNotFoundError{Identifier: identifier}
-}
-
-func (vnfe VarNotFoundError) Error() string {
-	return fmt.Sprintf("variable '%v' not found", vnfe.Identifier)
 }

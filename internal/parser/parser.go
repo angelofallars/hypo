@@ -7,11 +7,11 @@ package parser
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/angelofallars/hypo/internal/ast"
+	errs "github.com/angelofallars/hypo/internal/errors"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -30,14 +30,6 @@ func New() *Parser {
 	}
 }
 
-type parseError struct{ err error }
-
-func newParseError(err error) parseError {
-	return parseError{err: err}
-}
-
-func (pe parseError) Error() string { return fmt.Sprintf("ParseError: %v", pe.err.Error()) }
-
 // Parse parses a string into Hypo-specific AST nodes.
 func Parse(s string) (*ast.Program, error) {
 	return New().Parse(s)
@@ -46,7 +38,7 @@ func Parse(s string) (*ast.Program, error) {
 // Parse parses a string into Hypo-specific AST nodes.
 func (p *Parser) Parse(s string) (*ast.Program, error) {
 	if err := p.parseString(s); err != nil {
-		return nil, newParseError(err)
+		return nil, errs.NewParseError(err.Error())
 	}
 
 	program := &ast.Program{
@@ -63,7 +55,7 @@ func (p *Parser) Parse(s string) (*ast.Program, error) {
 	}
 
 	if len(parseErrors) != 0 {
-		return nil, newParseError(errors.Join(parseErrors...))
+		return nil, errors.Join(parseErrors...)
 	}
 
 	return program, nil
@@ -145,7 +137,7 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 	case atom.Output:
 		node, err = p.parsePrintStatement()
 	default:
-		err = fmt.Errorf("unknown tag '%v'", p.curNode.Data)
+		err = errs.NewParseError("unknown tag '%v'", p.curNode.Data)
 	}
 
 	return node, err
@@ -153,7 +145,7 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 
 func (p *Parser) parseStringStatement() (*ast.StringStatement, error) {
 	if p.curNode.FirstChild == nil {
-		return nil, errors.New("<s> element has no text child element")
+		return nil, errs.NewParseError("<s> element has no text child element")
 	}
 
 	return &ast.StringStatement{
@@ -166,12 +158,12 @@ func (p *Parser) parseNumberStatement() (*ast.NumberStatement, error) {
 
 	value, ok := attrs["value"]
 	if !ok {
-		return nil, fmt.Errorf("attribute 'value' not found")
+		return nil, errs.NewParseError("attribute 'value' not found")
 	}
 
 	number, err := strconv.ParseFloat(value, 64)
 	if err != nil {
-		return nil, errors.New("value is not a valid number")
+		return nil, errs.NewParseError("value is not a valid number")
 	}
 
 	return &ast.NumberStatement{
@@ -219,7 +211,7 @@ func (p *Parser) parseDeleteStatement() (*ast.DeleteStatement, error) {
 
 func (p *Parser) parseVariableStatement() (*ast.VariableStatement, error) {
 	if p.curNode.FirstChild == nil {
-		return nil, errors.New("<cite> element has no text child element")
+		return nil, errs.NewParseError("<cite> element has no text child element")
 	}
 
 	return &ast.VariableStatement{
