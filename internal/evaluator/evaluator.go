@@ -125,6 +125,5 @@ func evalPrint(_ *ast.PrintStatement, env *object.Env) error {
 	}
 
 	fmt.Println(top.String())
-
-	return err
+	return nil
 }
