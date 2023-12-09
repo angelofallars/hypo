@@ -100,6 +100,20 @@ const (
 	BinDivide
 )
 
+func (bo BinaryOp) String() string {
+	switch bo {
+	case BinAdd:
+		return "addition"
+	case BinSubtract:
+		return "subtraction"
+	case BinMultiply:
+		return "multiplication"
+	case BinDivide:
+		return "division"
+	}
+	return "UNKNOWN"
+}
+
 type BinaryOpStatement struct {
 	Op BinaryOp
 }

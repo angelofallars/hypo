@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/angelofallars/hypo/internal/ast"
+	errs "github.com/angelofallars/hypo/internal/errors"
 	"github.com/angelofallars/hypo/internal/object"
 )
 
@@ -128,7 +129,53 @@ func evalPushArray(node *ast.ArrayStatement, env *object.Env) error {
 
 // evalBinOp performs a binary operation on the top two values of the stack.
 func evalBinOp(node *ast.BinaryOpStatement, env *object.Env) error {
-	return nil
+	objects, err := env.Stack.PeekMany(2)
+	if err != nil {
+		return err
+	}
+
+	// Right-hand side is the top-most value in the stack
+	right := objects[0]
+	left := objects[1]
+
+	switch {
+	case left.Type() != right.Type():
+		return errs.NewTypeError("cannot perform %v on types '%v' and '%v'",
+			node.Op, left.Type(), right.Type())
+	case left.Type() == object.NumberType && right.Type() == object.NumberType:
+		leftNumber := left.(*object.Number).Value
+		rightNumber := right.(*object.Number).Value
+
+		number := 0.0
+		switch node.Op {
+		case ast.BinAdd:
+			number = leftNumber + rightNumber
+		case ast.BinSubtract:
+			number = leftNumber - rightNumber
+		case ast.BinMultiply:
+			number = leftNumber * rightNumber
+		case ast.BinDivide:
+			number = leftNumber / rightNumber
+		}
+
+		object := &object.Number{Value: number}
+
+		_, _ = env.Stack.PopMany(2)
+		env.Stack.Push(object)
+		return nil
+	case left.Type() == object.StringType && right.Type() == object.StringType && node.Op == ast.BinAdd:
+		leftString := left.(*object.String).Value
+		rightString := right.(*object.String).Value
+
+		object := &object.String{Value: leftString + rightString}
+
+		_, _ = env.Stack.PopMany(2)
+		env.Stack.Push(object)
+		return nil
+	default:
+		return errs.NewTypeError("cannot perform %v on type '%v'",
+			node.Op, left.Type())
+	}
 }
 
 // evalDuplicate duplicates the top value on the stack.

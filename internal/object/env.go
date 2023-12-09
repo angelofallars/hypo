@@ -79,6 +79,26 @@ func (s *stack) Peek() (Object, error) {
 	return s.slice[s.topIndex()], nil
 }
 
+// PeekMany returns values from the top of the stack without consuming them.
+func (s *stack) PeekMany(count int) ([]Object, error) {
+	if count > s.Len() {
+		return nil, errs.NewStackError("cannot peek more than the length of the entire stack")
+	}
+
+	objects := []Object{}
+	idx := s.Len() - 1
+	for count > 0 {
+		peekedObject := s.slice[idx]
+
+		objects = append(objects, peekedObject)
+
+		count -= 1
+		idx -= 1
+	}
+
+	return objects, nil
+}
+
 // Len returns the length of the stack.
 func (s *stack) Len() int {
 	return len(s.slice)

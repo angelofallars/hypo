@@ -35,10 +35,10 @@ Literals
 
 Math Commands
 
-  - [x] `<dd>`
-  - [x] `<sub>`
-  - [x] `<ul>`
-  - [x] `<div>`
+  - [x] `<dd>` - Supported for types `Number` and `String` (string concatenation)
+  - [x] `<sub>` - Supported for types `Number`
+  - [x] `<ul>` - Supported for types `Number`
+  - [x] `<div>` - Supported for types `Number`
 
 Stack Manipulation Commands
   - [x] `<dt>`
