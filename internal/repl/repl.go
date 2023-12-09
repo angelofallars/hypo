@@ -30,15 +30,15 @@ func Start() {
 
 		line := scanner.Text()
 
-		node, err := parser.Parse(line)
+		program, err := parser.Parse(line)
 		if err != nil {
-			fmt.Errorf("%w\n", err)
+			fmt.Fprintf(os.Stderr, "%v\n", err)
 			continue
 		}
 
-		err = evaluator.Exec(node, env)
+		err = evaluator.Exec(program, env)
 		if err != nil {
-			fmt.Errorf("%w\n", err)
+			fmt.Fprintf(os.Stderr, "%v\n", err)
 			continue
 		}
 	}

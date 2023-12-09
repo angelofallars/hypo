@@ -29,7 +29,7 @@ func Exec() int {
 
 			contents := string(bytes)
 
-			node, err := parser.Parse(contents)
+			program, err := parser.Parse(contents)
 			if err != nil {
 				cmd.PrintErrln(err)
 				return
@@ -37,7 +37,7 @@ func Exec() int {
 
 			env := object.NewEnv()
 
-			err = evaluator.Exec(node, env)
+			err = evaluator.Exec(program, env)
 			if err != nil {
 				cmd.PrintErrln(err)
 				return
