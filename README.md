@@ -36,9 +36,9 @@ Literals
 Math Commands
 
   - [x] `<dd>` - Supported for types `Number` and `String` (string concatenation)
-  - [x] `<sub>` - Supported for types `Number`
-  - [x] `<ul>` - Supported for types `Number`
-  - [x] `<div>` - Supported for types `Number`
+  - [x] `<sub>` - Supported for type `Number`
+  - [x] `<ul>` - Supported for type `Number`
+  - [x] `<div>` - Supported for type `Number`
 
 Stack Manipulation Commands
   - [x] `<dt>`
@@ -82,3 +82,14 @@ Functions
 Programs
   - [ ] `<main>`
   - [ ] `<body>`
+
+## Types
+
+Internally, Hypo has these types for values. Note that they may act differently to the
+original JavaScript-based implementation of HTML, the programming language. Most importantly, you cannot ever add two values of different types, unlike JavaScript.
+
+- `Number` - Number type, created by `<data>`
+- `String` - String type, created by `<s>`
+- `Bool` - String type, created by using `<cite>true</cite>` and `<cite>false</cite>`
+- `Obj` - Object type, TODO
+- `Array` - Array type, created by using `<ol>`
