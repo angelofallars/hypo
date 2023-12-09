@@ -5,8 +5,6 @@ import (
 	"slices"
 )
 
-// TODO: replace any with Object
-
 // Env is an environment of the runtime which contains runtime values.
 type Env struct {
 	// Stack is the primary storage of values.
