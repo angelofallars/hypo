@@ -117,7 +117,7 @@ type vars struct {
 func (v *vars) Get(identifier string) (Object, error) {
 	object, ok := v.objects[identifier]
 	if !ok {
-		return nil, errs.NewVariableError("variable '%v' is not found", identifier)
+		return nil, errs.NewVariableError("variable '%v' is not defined", identifier)
 	}
 	return object, nil
 }
