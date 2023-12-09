@@ -74,7 +74,7 @@ type DuplicateStatement struct{}
 
 func (ds *DuplicateStatement) astNode() {}
 func (ds *DuplicateStatement) String() string {
-	return "<dup></dup>"
+	return "<dt></dt>"
 }
 
 type DeleteStatement struct{}
