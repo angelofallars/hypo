@@ -133,7 +133,7 @@ func evalBinOp(node *ast.BinaryOpStatement, env *object.Env) error {
 
 // evalDuplicate duplicates the top value on the stack.
 func evalDuplicate(_ *ast.DuplicateStatement, env *object.Env) error {
-	v, err := env.Stack.Top()
+	v, err := env.Stack.Peek()
 	if err != nil {
 		return err
 	}
@@ -175,10 +175,10 @@ func evalGetVariable(node *ast.GetVariableStatement, env *object.Env) error {
 
 // evalPrint prints the top value without consuming it to stdout.
 func evalPrint(_ *ast.PrintStatement, env *object.Env) error {
-	top, err := env.Stack.Top()
+	object, err := env.Stack.Peek()
 	if err != nil {
 		return err
 	}
-	fmt.Println(top.String())
+	fmt.Println(object.String())
 	return nil
 }

@@ -39,7 +39,7 @@ func (s *stack) Push(v Object) {
 
 // Pop removes a value from the top of the stack and returns it.
 func (s *stack) Pop() (Object, error) {
-	v, err := s.Top()
+	v, err := s.Peek()
 	if err != nil {
 		return nil, errs.NewStackError("stack is empty")
 	}
@@ -70,8 +70,8 @@ func (s *stack) PopMany(count int) ([]Object, error) {
 	return objects, nil
 }
 
-// Top returns a value from the top of the stack without consuming it.
-func (s *stack) Top() (Object, error) {
+// Peek returns a value from the top of the stack without consuming it.
+func (s *stack) Peek() (Object, error) {
 	if len(s.slice) == 0 {
 		return nil, errs.NewStackError("stack is empty")
 	}
