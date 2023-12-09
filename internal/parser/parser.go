@@ -101,6 +101,9 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 	var err error
 
 	switch p.curNode.DataAtom {
+	// ===============================
+	// Literals
+	// ===============================
 	case atom.S:
 		node, err = p.parseStringStatement()
 	case atom.Data:
@@ -109,6 +112,10 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 		node, err = p.parseArrayStatement()
 	case atom.Li:
 		node, err = p.parseArrayElementStatement()
+
+	// ===============================
+	// Math commands
+	// ===============================
 	case atom.Dd:
 		node, err = p.parseBinaryOpStatement(ast.BinAdd)
 	case atom.Sub:
@@ -117,10 +124,18 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 		node, err = p.parseBinaryOpStatement(ast.BinMultiply)
 	case atom.Div:
 		node, err = p.parseBinaryOpStatement(ast.BinDivide)
+
+	// ===============================
+	// Stack manipulation commands
+	// ===============================
 	case atom.Dt:
 		node, err = p.parseDuplicateStatement()
 	case atom.Del:
 		node, err = p.parseDeleteStatement()
+
+	// ===============================
+	// I/O
+	// ===============================
 	case atom.Output:
 		node, err = p.parsePrintStatement()
 	default:
