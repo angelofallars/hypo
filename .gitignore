@@ -9,3 +9,5 @@ tmp/
 node_modules/
 
 reference/
+
+debug/
