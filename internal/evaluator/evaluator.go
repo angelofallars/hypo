@@ -25,8 +25,8 @@ func Exec(node ast.Node, env *object.Env) error {
 		err = evalPushString(node, env)
 	case *ast.NumberStatement:
 		err = evalPushNumber(node, env)
-	// case *ast.ArrayStatement:
-	// 	err = evalPushArray(node, env)
+	case *ast.ArrayStatement:
+		err = evalPushArray(node, env)
 	// case *ast.TableStatement:
 	// 	err = evalPushTable(node, env)
 
@@ -84,6 +84,45 @@ func evalPushString(node *ast.StringStatement, env *object.Env) error {
 func evalPushNumber(node *ast.NumberStatement, env *object.Env) error {
 	object := &object.Number{Value: node.Value}
 	env.Stack.Push(object)
+	return nil
+}
+
+// evalPushArray pushes an array into the stack.
+func evalPushArray(node *ast.ArrayStatement, env *object.Env) error {
+	obj := &object.Array{}
+
+	elements := []object.Object{}
+
+	initialLength := env.Stack.Len()
+	defer func() {
+		// Pop any excess objects
+		removeCount := env.Stack.Len() - initialLength - 1
+		_, _ = env.Stack.PopMany(removeCount)
+	}()
+
+	for _, childNode := range node.Elements {
+		for _, childChildNode := range childNode.Statements {
+			err := Exec(childChildNode, env)
+			if err != nil {
+				return err
+			}
+		}
+
+		poppedObject, err := env.Stack.Pop()
+		if err != nil {
+			return err
+		}
+
+		elements = append(elements, poppedObject)
+
+		// Pop any excess objects
+		removeCount := env.Stack.Len() - initialLength
+		_, _ = env.Stack.PopMany(removeCount)
+	}
+
+	obj.Value = elements
+	env.Stack.Push(obj)
+
 	return nil
 }
 

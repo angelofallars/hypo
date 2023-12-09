@@ -49,6 +49,27 @@ func (s *stack) Pop() (Object, error) {
 	return v, nil
 }
 
+// PopMany removes several values from the top of the stack and returns them.
+func (s *stack) PopMany(count int) ([]Object, error) {
+	if count > s.Len() {
+		return nil, errs.NewStackError("cannot pop more than the length of the entire stack")
+	}
+
+	objects := []Object{}
+	for count > 0 {
+		poppedObject, err := s.Pop()
+		if err != nil {
+			panic("PopMany: had pop error even after checking pop length")
+		}
+
+		objects = append(objects, poppedObject)
+
+		count -= 1
+	}
+
+	return objects, nil
+}
+
 // Top returns a value from the top of the stack without consuming it.
 func (s *stack) Top() (Object, error) {
 	if len(s.slice) == 0 {
@@ -56,6 +77,11 @@ func (s *stack) Top() (Object, error) {
 	}
 
 	return s.slice[s.topIndex()], nil
+}
+
+// Len returns the length of the stack.
+func (s *stack) Len() int {
+	return len(s.slice)
 }
 
 // topIndex returns the last index in the stack.

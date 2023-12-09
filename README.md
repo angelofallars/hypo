@@ -30,7 +30,7 @@ Currently implemented commands:
 Literals
   - [x] `<s>`
   - [x] `<data>`
-  - [ ] `<ol>`
+  - [x] `<ol>`
   - [ ] `<table>`
 
 Math Commands
