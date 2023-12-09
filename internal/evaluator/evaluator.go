@@ -75,15 +75,15 @@ func evalProgram(program *ast.Program, env *object.Env) error {
 
 // evalPushString pushes a string into the stack.
 func evalPushString(node *ast.StringStatement, env *object.Env) error {
-	obj := &object.String{Value: node.Value}
-	env.Stack.Push(obj)
+	object := &object.String{Value: node.Value}
+	env.Stack.Push(object)
 	return nil
 }
 
 // evalPushNumber pushes a number into the stack.
 func evalPushNumber(node *ast.NumberStatement, env *object.Env) error {
-	obj := &object.Number{Value: node.Value}
-	env.Stack.Push(obj)
+	object := &object.Number{Value: node.Value}
+	env.Stack.Push(object)
 	return nil
 }
 
@@ -126,11 +126,11 @@ func evalSetVariable(node *ast.SetVariableStatement, env *object.Env) error {
 
 // evalGetVariable pushes a variable with the given name into the stack.
 func evalGetVariable(node *ast.GetVariableStatement, env *object.Env) error {
-	obj, err := env.Vars.Get(node.Identifier)
+	object, err := env.Vars.Get(node.Identifier)
 	if err != nil {
 		return err
 	}
-	env.Stack.Push(obj)
+	env.Stack.Push(object)
 	return nil
 }
 
@@ -140,7 +140,6 @@ func evalPrint(_ *ast.PrintStatement, env *object.Env) error {
 	if err != nil {
 		return err
 	}
-
 	fmt.Println(top.String())
 	return nil
 }
