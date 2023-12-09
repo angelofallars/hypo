@@ -133,12 +133,12 @@ func evalBinOp(node *ast.BinaryOpStatement, env *object.Env) error {
 
 // evalDuplicate duplicates the top value on the stack.
 func evalDuplicate(_ *ast.DuplicateStatement, env *object.Env) error {
-	v, err := env.Stack.Peek()
+	object, err := env.Stack.Peek()
 	if err != nil {
 		return err
 	}
 
-	env.Stack.Push(v)
+	env.Stack.Push(object)
 	return nil
 }
 
