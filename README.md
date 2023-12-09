@@ -60,8 +60,8 @@ Control Flow
   - [ ] `<a>`
 
 Variables
-  - [ ] `<var>`
-  - [ ] `<cite>`
+  - [x] `<var>`
+  - [x] `<cite>`
 
 I/O
   - [ ] `<input>`
