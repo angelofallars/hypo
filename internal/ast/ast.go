@@ -91,6 +91,15 @@ func (os *PrintStatement) String() string {
 	return "<output></output>"
 }
 
+type BinaryOp uint
+
+const (
+	BinAdd BinaryOp = iota
+	BinSubtract
+	BinMultiply
+	BinDivide
+)
+
 type BinaryOpStatement struct {
 	Op BinaryOp
 }
@@ -112,15 +121,6 @@ func (bos *BinaryOpStatement) String() string {
 	}
 	return fmt.Sprintf("<%s></%s>", tag, tag)
 }
-
-type BinaryOp uint
-
-const (
-	BinAdd BinaryOp = iota
-	BinSubtract
-	BinMultiply
-	BinDivide
-)
 
 type GetVariableStatement struct {
 	Identifier string
