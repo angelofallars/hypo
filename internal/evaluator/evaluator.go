@@ -47,8 +47,10 @@ func Exec(node ast.Node, env *object.Env) error {
 	// ===============================
 	// Variables
 	// ===============================
-	case *ast.VariableStatement:
-		err = evalVariable(node, env)
+	case *ast.SetVariableStatement:
+		err = evalSetVariable(node, env)
+	case *ast.GetVariableStatement:
+		err = evalGetVariable(node, env)
 
 	// ===============================
 	// I/O
@@ -107,8 +109,23 @@ func evalDelete(_ *ast.DeleteStatement, env *object.Env) error {
 	return err
 }
 
-// evalVariable pushes a variable with the given name into the stack.
-func evalVariable(node *ast.VariableStatement, env *object.Env) error {
+// evalSetVariable sets a variable in the environment with the top value on the stack.
+func evalSetVariable(node *ast.SetVariableStatement, env *object.Env) error {
+	object, err := env.Stack.Pop()
+	if err != nil {
+		return err
+	}
+
+	err = env.Vars.Set(node.Identifier, object)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// evalGetVariable pushes a variable with the given name into the stack.
+func evalGetVariable(node *ast.GetVariableStatement, env *object.Env) error {
 	obj, err := env.Vars.Get(node.Identifier)
 	if err != nil {
 		return err

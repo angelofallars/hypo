@@ -128,8 +128,10 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 	// ===============================
 	// Variables
 	// ===============================
+	case atom.Var:
+		node, err = p.parseSetVariableStatement()
 	case atom.Cite:
-		node, err = p.parseVariableStatement()
+		node, err = p.parseGetVariableStatement()
 
 	// ===============================
 	// I/O
@@ -209,13 +211,26 @@ func (p *Parser) parseDeleteStatement() (*ast.DeleteStatement, error) {
 	return &ast.DeleteStatement{}, nil
 }
 
-func (p *Parser) parseVariableStatement() (*ast.VariableStatement, error) {
+func (p *Parser) parseGetVariableStatement() (*ast.GetVariableStatement, error) {
 	if p.curNode.FirstChild == nil {
 		return nil, errs.NewParseError("<cite> element has no text child element")
 	}
 
-	return &ast.VariableStatement{
+	return &ast.GetVariableStatement{
 		Identifier: p.curNode.FirstChild.Data,
+	}, nil
+}
+
+func (p *Parser) parseSetVariableStatement() (*ast.SetVariableStatement, error) {
+	attrs := attrMap(p.curNode)
+
+	identifier, ok := attrs["title"]
+	if !ok {
+		return nil, errs.NewParseError("attribute 'title' not found")
+	}
+
+	return &ast.SetVariableStatement{
+		Identifier: identifier,
 	}, nil
 }
 

@@ -122,11 +122,20 @@ const (
 	BinDivide
 )
 
-type VariableStatement struct {
+type GetVariableStatement struct {
 	Identifier string
 }
 
-func (vs *VariableStatement) astNode() {}
-func (vs *VariableStatement) String() string {
-	return fmt.Sprintf("<cite>%v</cite>", vs.Identifier)
+func (gvs *GetVariableStatement) astNode() {}
+func (gvs *GetVariableStatement) String() string {
+	return fmt.Sprintf("<cite>%v</cite>", gvs.Identifier)
+}
+
+type SetVariableStatement struct {
+	Identifier string
+}
+
+func (svs *SetVariableStatement) astNode() {}
+func (svs *SetVariableStatement) String() string {
+	return fmt.Sprintf(`<var title="%v"></var>`, svs.Identifier)
 }
