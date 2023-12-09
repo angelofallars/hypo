@@ -12,6 +12,7 @@ import (
 
 	"github.com/angelofallars/hypo/internal/ast"
 	errs "github.com/angelofallars/hypo/internal/errors"
+	"github.com/angelofallars/hypo/pkg/sliceutil"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -174,13 +175,19 @@ func (p *Parser) parseNumberStatement() (*ast.NumberStatement, error) {
 }
 
 func (p *Parser) parseArrayStatement() (*ast.ArrayStatement, error) {
-	array := &ast.ArrayStatement{Statements: []ast.Node{}}
+	array := &ast.ArrayStatement{Elements: []*ast.ArrayElementStatement{}}
 
-	statements, err := p.parseChildStatements()
+	statements, err := p.parseChildStatements(expectAtom(atom.Li))
 	if err != nil {
 		return nil, err
 	}
-	array.Statements = statements
+
+	elemStatements := sliceutil.Map(statements,
+		func(node ast.Node) *ast.ArrayElementStatement {
+			return node.(*ast.ArrayElementStatement)
+		})
+
+	array.Elements = elemStatements
 
 	return array, nil
 }
@@ -239,7 +246,7 @@ func (p *Parser) parsePrintStatement() (*ast.PrintStatement, error) {
 }
 
 // parseChildStatements parses the child nodes of the current node.
-func (p *Parser) parseChildStatements() ([]ast.Node, error) {
+func (p *Parser) parseChildStatements(validators ...func(node *html.Node) error) ([]ast.Node, error) {
 	originalNode := p.curNode
 	p.peekNode = originalNode.FirstChild
 	p.nextNode()
@@ -248,6 +255,17 @@ func (p *Parser) parseChildStatements() ([]ast.Node, error) {
 
 	parseErrors := []error{}
 	for p.curNode != nil {
+		hasValidationErrs := false
+		for _, validator := range validators {
+			if err := validator(p.curNode); err != nil {
+				parseErrors = append(parseErrors, err)
+				hasValidationErrs = true
+			}
+		}
+		if hasValidationErrs {
+			continue
+		}
+
 		newNode, err := p.parseStatement()
 		if err != nil {
 			parseErrors = append(parseErrors, err)
@@ -270,6 +288,15 @@ func (p *Parser) parseChildStatements() ([]ast.Node, error) {
 
 func (p *Parser) curNodeIs(atom atom.Atom) bool {
 	return p.curNode != nil && p.curNode.DataAtom == atom
+}
+
+func expectAtom(a atom.Atom) func(node *html.Node) error {
+	return func(node *html.Node) error {
+		if node.DataAtom != a {
+			return errs.NewParseError("expected tag %v, found %v", a.String(), node.Data)
+		}
+		return nil
+	}
 }
 
 // attrMap creates a map from the Attr slice of an [html.Node].

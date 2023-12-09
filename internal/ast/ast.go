@@ -51,12 +51,12 @@ func (bs *BoolStatement) String() string {
 }
 
 type ArrayStatement struct {
-	Statements []Node
+	Elements []*ArrayElementStatement
 }
 
 func (as *ArrayStatement) astNode() {}
 func (as *ArrayStatement) String() string {
-	childStrings := sliceutil.Map(as.Statements, func(stmt Node) string { return stmt.String() })
+	childStrings := sliceutil.Map(as.Elements, func(stmt *ArrayElementStatement) string { return stmt.String() })
 	return fmt.Sprintf(`<ol>%v</ol>`, strings.Join(childStrings, ""))
 }
 
