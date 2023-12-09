@@ -121,3 +121,12 @@ const (
 	BinMultiply
 	BinDivide
 )
+
+type VariableStatement struct {
+	Identifier string
+}
+
+func (vs *VariableStatement) astNode() {}
+func (vs *VariableStatement) String() string {
+	return fmt.Sprintf("<cite>%v</cite>", vs.Identifier)
+}

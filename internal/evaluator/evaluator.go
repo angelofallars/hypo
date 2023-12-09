@@ -45,6 +45,12 @@ func Exec(node ast.Node, env *object.Env) error {
 		err = evalDelete(node, env)
 
 	// ===============================
+	// Variables
+	// ===============================
+	case *ast.VariableStatement:
+		err = evalVariable(node, env)
+
+	// ===============================
 	// I/O
 	// ===============================
 	case *ast.PrintStatement:
@@ -99,6 +105,27 @@ func evalDuplicate(_ *ast.DuplicateStatement, env *object.Env) error {
 func evalDelete(_ *ast.DeleteStatement, env *object.Env) error {
 	_, err := env.Stack.Pop()
 	return err
+}
+
+type VarNotFoundError struct{ Identifier string }
+
+func NewVarNotFoundError(identifier string) VarNotFoundError {
+	return VarNotFoundError{Identifier: identifier}
+}
+
+func (vnfe VarNotFoundError) Error() string {
+	return fmt.Sprintf("variable '%v' not found", vnfe.Identifier)
+}
+
+// evalVariable pushes a variable with the given name into the stack.
+func evalVariable(node *ast.VariableStatement, env *object.Env) error {
+	obj, ok := env.Vars[node.Identifier]
+	if !ok {
+		return NewVarNotFoundError(node.Identifier)
+	}
+
+	env.Stack.Push(obj)
+	return nil
 }
 
 // evalPrint prints the top value without consuming it to stdout.

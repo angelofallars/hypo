@@ -134,6 +134,12 @@ func (p *Parser) parseStatement() (ast.Node, error) {
 		node, err = p.parseDeleteStatement()
 
 	// ===============================
+	// Variables
+	// ===============================
+	case atom.Cite:
+		node, err = p.parseVariableStatement()
+
+	// ===============================
 	// I/O
 	// ===============================
 	case atom.Output:
@@ -209,6 +215,16 @@ func (p *Parser) parseDuplicateStatement() (*ast.DuplicateStatement, error) {
 
 func (p *Parser) parseDeleteStatement() (*ast.DeleteStatement, error) {
 	return &ast.DeleteStatement{}, nil
+}
+
+func (p *Parser) parseVariableStatement() (*ast.VariableStatement, error) {
+	if p.curNode.FirstChild == nil {
+		return nil, errors.New("<cite> element has no text child element")
+	}
+
+	return &ast.VariableStatement{
+		Identifier: p.curNode.FirstChild.Data,
+	}, nil
 }
 
 func (p *Parser) parsePrintStatement() (*ast.PrintStatement, error) {
