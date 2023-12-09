@@ -107,23 +107,12 @@ func evalDelete(_ *ast.DeleteStatement, env *object.Env) error {
 	return err
 }
 
-type VarNotFoundError struct{ Identifier string }
-
-func NewVarNotFoundError(identifier string) VarNotFoundError {
-	return VarNotFoundError{Identifier: identifier}
-}
-
-func (vnfe VarNotFoundError) Error() string {
-	return fmt.Sprintf("variable '%v' not found", vnfe.Identifier)
-}
-
 // evalVariable pushes a variable with the given name into the stack.
 func evalVariable(node *ast.VariableStatement, env *object.Env) error {
-	obj, ok := env.Vars[node.Identifier]
-	if !ok {
-		return NewVarNotFoundError(node.Identifier)
+	obj, err := env.Vars.Get(node.Identifier)
+	if err != nil {
+		return err
 	}
-
 	env.Stack.Push(obj)
 	return nil
 }

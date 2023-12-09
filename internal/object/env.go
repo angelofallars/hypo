@@ -2,6 +2,7 @@ package object
 
 import (
 	"errors"
+	"fmt"
 	"slices"
 )
 
@@ -9,27 +10,29 @@ import (
 type Env struct {
 	// Stack is the primary storage of values.
 	Stack stack
-	Vars  map[string]Object
-}
-
-type stack struct {
-	slice []Object
+	Vars  vars
 }
 
 // NewEnv returns a new [object.Env] instance.
 func NewEnv() *Env {
 	return &Env{
 		Stack: stack{make([]Object, 0, 256)},
-		Vars: map[string]Object{
-			// Start with standard variables for common values
-			"true":  &Bool{Value: true},
-			"false": &Bool{Value: false},
-			"null":  &Null{},
+		Vars: vars{
+			objects: map[string]Object{
+				// Start with standard variables for common values
+				"true":  &Bool{Value: true},
+				"false": &Bool{Value: false},
+				"null":  &Null{},
+			},
 		},
 	}
 }
 
 var ErrStackEmpty = errors.New("stack empty")
+
+type stack struct {
+	slice []Object
+}
 
 // Push a value to the top of the stack.
 func (s *stack) Push(v Object) {
@@ -60,4 +63,33 @@ func (s *stack) Top() (Object, error) {
 // topIndex returns the last index in the stack.
 func (s *stack) topIndex() int {
 	return len(s.slice) - 1
+}
+
+type vars struct {
+	objects map[string]Object
+}
+
+// Get retrieves a variable with the given identifier.
+func (v *vars) Get(identifier string) (Object, error) {
+	object, ok := v.objects[identifier]
+	if !ok {
+		return nil, NewVarNotFoundError(identifier)
+	}
+	return object, nil
+}
+
+// Set stores an object with the given identifier.
+func (v *vars) Set(identifier string, object Object) error {
+	v.objects[identifier] = object
+	return nil
+}
+
+type VarNotFoundError struct{ Identifier string }
+
+func NewVarNotFoundError(identifier string) VarNotFoundError {
+	return VarNotFoundError{Identifier: identifier}
+}
+
+func (vnfe VarNotFoundError) Error() string {
+	return fmt.Sprintf("variable '%v' not found", vnfe.Identifier)
 }
